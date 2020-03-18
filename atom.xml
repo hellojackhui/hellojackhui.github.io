@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://hellojackhui.github.io/"/>
-  <updated>2020-03-17T02:11:08.415Z</updated>
+  <updated>2020-03-18T01:10:26.372Z</updated>
   <id>http://hellojackhui.github.io/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>关于对象的拷贝</title>
+    <link href="http://hellojackhui.github.io/2020/03/18/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%85%B3%E4%BA%8E%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%8B%B7%E8%B4%9D/"/>
+    <id>http://hellojackhui.github.io/2020/03/18/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%85%B3%E4%BA%8E%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%8B%B7%E8%B4%9D/</id>
+    <published>2020-03-18T00:35:21.042Z</published>
+    <updated>2020-03-18T01:10:26.372Z</updated>
+    
+    <content type="html"><![CDATA[<p>js的数据类型分为基础类型和引用类型，基础类型存于栈中，而引用类型的存储是分为两部分，引用类型的地址（指针）存放在栈中，而具体的对象存放在堆中。</p><p>而当需要拷贝一份数据时，基础类型很简单，复制一份信息并存放到栈中，就能保证与原来的不是同一份。但是引用类型的话，例如我们将对象作为函数的参数传入。此时js只是将<code>引用类型的地址拷贝一份，添加到栈中</code>，虽然地址与原来的不一致，但是指向的对象是一致的。所以我们对传参对象的属性进行修改，会影响原来对象的原因就在于此。</p><p>但是有许多场景需要我们对对象进行不同程度的拷贝满足我们的需要，所以引出浅拷贝和深拷贝两种方式</p><blockquote><p>浅拷贝就是复制一份对象的指针，具体对象依然公用，深拷贝就是完整的复制一份指针和对象，另外创造一个一模一样的对象，新对象跟原对象不共享内存，修改新对象不会改到原对象。</p></blockquote><h3 id="浅拷贝的创建方法"><a href="#浅拷贝的创建方法" class="headerlink" title="浅拷贝的创建方法"></a>浅拷贝的创建方法</h3><ol><li>Array.prototype.slice();</li></ol><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = [<span class="number">1</span>, <span class="number">3</span>, &#123;</span><br><span class="line">   username: <span class="string">' kobe'</span></span><br><span class="line">&#125;];</span><br><span class="line"><span class="keyword">let</span> arr3 = arr.slice();</span><br><span class="line">arr3[<span class="number">2</span>].username = <span class="string">'wade'</span></span><br><span class="line"><span class="built_in">console</span>.log(arr);</span><br></pre></td></tr></table></figure><ol start="2"><li>Array.prototype.concat();</li></ol><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = [<span class="number">1</span>, <span class="number">3</span>, &#123;</span><br><span class="line">   username: <span class="string">'kobe'</span></span><br><span class="line">&#125;];</span><br><span class="line"><span class="keyword">let</span> arr2=arr.concat();    </span><br><span class="line">arr2[<span class="number">2</span>].username = <span class="string">'wade'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(arr);</span><br></pre></td></tr></table></figure><ol start="3"><li>Object.assign();</li></ol><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123; <span class="attr">a</span>: &#123;<span class="attr">a</span>: <span class="string">"kobe"</span>, <span class="attr">b</span>: <span class="number">39</span>&#125; &#125;;</span><br><span class="line"><span class="keyword">var</span> initalObj = <span class="built_in">Object</span>.assign(&#123;&#125;, obj);</span><br><span class="line">initalObj.a.a = <span class="string">"wade"</span>;</span><br><span class="line"><span class="built_in">console</span>.log(obj.a.a); <span class="comment">// wade</span></span><br></pre></td></tr></table></figure><blockquote><p>注意: Array.prototype.slice/concat方法在拷贝过程中，如果属性的值为基础类型，那么当前值会完全拷贝，如果是引用类型，那么会拷贝引用类型的地址。</p></blockquote><h3 id="深拷贝的创建方法"><a href="#深拷贝的创建方法" class="headerlink" title="深拷贝的创建方法"></a>深拷贝的创建方法</h3><ol><li>JSON.prase(jSON.stringify(data))</li></ol><blockquote><p>缺点：对于部分数据类型和循环引用无法解决</p></blockquote><ol start="2"><li>递归实现</li></ol><p>关于创建深拷贝需要考虑一下几点：</p><ul><li>对于循环引用的问题</li><li>关于symbol数据类型的问题</li></ul><p>针对循环引用问题，可以考虑使用数据结构进行存储，遇到循环引用的直接取出即可， 针对不同的数据类型在遍历方式要有所区分，这里对于symbol数据类型，可以使用es6的Reflect.ownKeys进行遍历,这个方法包含了对于symbol属性的遍历</p><p>以下是基础实现版</p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">deepcopy</span>(<span class="params">source, map = new Map(</span>)) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> source != <span class="string">'object'</span>) <span class="keyword">return</span> source;</span><br><span class="line">  <span class="keyword">if</span> (map.get(source)) <span class="keyword">return</span> map.get(source);</span><br><span class="line">  <span class="keyword">let</span> target = <span class="built_in">Array</span>.isArray(source) ? [] : &#123;&#125;;</span><br><span class="line">  map.set(source, target);</span><br><span class="line">  <span class="built_in">Reflect</span>.ownKeys(source).foreach(<span class="function">(<span class="params">key</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (source.hasOwnProperty(key)) &#123;</span><br><span class="line">      <span class="keyword">if</span> (source[key] == <span class="literal">null</span>) &#123;</span><br><span class="line">        targe[key] = <span class="literal">null</span>;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        target[key] = deepcopy(source[key], map)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="keyword">return</span> target;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;js的数据类型分为基础类型和引用类型，基础类型存于栈中，而引用类型的存储是分为两部分，引用类型的地址（指针）存放在栈中，而具体的对象存放在堆中。&lt;/p&gt;&lt;p&gt;而当需要拷贝一份数据时，基础类型很简单，复制一份信息并存放到栈中，就能保证与原来的不是同一份。但是引用类型的话，例如
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>Promise</title>
