@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://hellojackhui.github.io/"/>
-  <updated>2020-03-25T00:52:26.218Z</updated>
+  <updated>2020-03-27T01:27:51.881Z</updated>
   <id>http://hellojackhui.github.io/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>阅读《http灵魂之问》总结</title>
+    <link href="http://hellojackhui.github.io/2020/03/27/%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB/%E9%98%85%E8%AF%BB%E3%80%8Ahttp%E7%81%B5%E9%AD%82%E4%B9%8B%E9%97%AE%E3%80%8B%E6%80%BB%E7%BB%93/"/>
+    <id>http://hellojackhui.github.io/2020/03/27/%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB/%E9%98%85%E8%AF%BB%E3%80%8Ahttp%E7%81%B5%E9%AD%82%E4%B9%8B%E9%97%AE%E3%80%8B%E6%80%BB%E7%BB%93/</id>
+    <published>2020-03-27T00:45:21.407Z</published>
+    <updated>2020-03-27T01:27:51.881Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>本片文档对神三元的《http灵魂之问》中问题的分析与理解。</p></blockquote><h2 id="知识图谱"><a href="#知识图谱" class="headerlink" title="知识图谱"></a>知识图谱</h2><p><img src="https://user-gold-cdn.xitu.io/2020/3/23/17104ea1fdee5669?imageslim" alt="http灵魂之问图谱"></p><h3 id="001-HTTP-报文结构是怎样的？"><a href="#001-HTTP-报文结构是怎样的？" class="headerlink" title="001. HTTP 报文结构是怎样的？"></a>001. HTTP 报文结构是怎样的？</h3><p>http报文分为请求报文和响应报文</p><p>请求报文主要分请求行，请求头，空行和请求体。<br>在请求行中主要包括<code>请求类型，请求路径，请求协议</code>。<br>请求头包含有关获取的数据格式，缓存相关，跨域，ua等</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">POST www.baidu.com HTTP&#x2F;1.1</span><br><span class="line">content-type: text&#x2F;plain</span><br><span class="line">Accept-length: 2222</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">   name: jackhui</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>响应报文主要分响应行，响应头，空行, 响应体<br>在响应行中主要包括<code>协议版本，状态码，状态名称</code>。<br>响应头包含有关获取的数据格式，缓存相关，跨域，ua等</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HTTP&#x2F;1.1 200 ok</span><br><span class="line">Content-Type: text&#x2F;plain; charset&#x3D;utf-8</span><br><span class="line"></span><br><span class="line">Etag: 1111111</span><br></pre></td></tr></table></figure><h4 id="空行的作用"><a href="#空行的作用" class="headerlink" title="空行的作用"></a>空行的作用</h4><p>空行的作用是区分响应头和响应体，如果在响应头中添加空行，那么空行后的内容会被认为是响应体。</p><h3 id="002-如何理解-HTTP-的请求方法？"><a href="#002-如何理解-HTTP-的请求方法？" class="headerlink" title="002.如何理解 HTTP 的请求方法？"></a>002.如何理解 HTTP 的请求方法？</h3><p>个人对http请求方法联想到的知识内容</p><blockquote><p>请求方法有哪些？ 什么作用？ 有什么区别？ 用途有哪些？ 预检请求的条件。</p></blockquote><h4 id="请求方法和作用"><a href="#请求方法和作用" class="headerlink" title="请求方法和作用"></a>请求方法和作用</h4><table><thead><tr><th>请求方法</th><th>作用</th></tr></thead><tbody><tr><td>get</td><td>获取资源</td></tr><tr><td>post</td><td>上传数据</td></tr><tr><td>head</td><td>获取数据元信息</td></tr><tr><td>put</td><td>提交数据</td></tr><tr><td>delete</td><td>删除数据</td></tr><tr><td>options</td><td>预检请求</td></tr><tr><td>connect</td><td>用于代理服务器的隧道连接</td></tr><tr><td>trace</td><td>跟踪请求</td></tr></tbody></table><h4 id="GET-和-POST-有什么区别？"><a href="#GET-和-POST-有什么区别？" class="headerlink" title="GET 和 POST 有什么区别？"></a>GET 和 POST 有什么区别？</h4><ul><li>从<code>缓存</code>的角度，get请求会被浏览器自动缓存。post需要进行设置才会缓存</li><li>从<code>浏览器</code>的角度，浏览器回退时get请求不会触发，post会</li><li>从<code>浏览器</code>的角度，get请求参数会存入浏览器的历史记录中，post不会</li><li>从<code>参数</code>的角度，get请求的传参会与请求的url进行拼接，且有长度限制，post请求传参存入请求体中，长度不限</li><li>从<code>安全</code>的角度，get请求的安全性不如post请求</li><li>从<code>编码</code>的角度，get请求只能使用url编码，post支持多种编码方式</li><li>从<code>幂等</code>的角度，get请求具有<code>幂等性</code>, post没有 (<code>幂等</code>表示执行相同的操作，结果也是相同的)</li><li>从<code>TCP</code>的角度，GET 请求会把请求报文一次性发出去，而 POST 会分为两个 TCP 数据包，首先发 header 部分，如果服务器响应 100(continue)， 然后发 body 部分。(火狐浏览器除外，它的 POST 请求只发一个 TCP 包)</li></ul><blockquote><p>持续更新。。。。</p></blockquote>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;blockquote&gt;&lt;p&gt;本片文档对神三元的《http灵魂之问》中问题的分析与理解。&lt;/p&gt;&lt;/blockquote&gt;&lt;h2 id=&quot;知识图谱&quot;&gt;&lt;a href=&quot;#知识图谱&quot; class=&quot;headerlink&quot; title=&quot;知识图谱&quot;&gt;&lt;/a&gt;知识图谱&lt;/h2&gt;&lt;p&gt;&lt;
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
   
   <entry>
     <title>封装ajax请求</title>
